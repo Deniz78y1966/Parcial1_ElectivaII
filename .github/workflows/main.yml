@@ -3,23 +3,51 @@ name: Publicar Pagina a Surge.sh
 on:
   push:
     branches:
-      - main
+      - main # O la rama principal de tu proyecto, por ejemplo, master
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Clona el repositorio
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: configura nodejs  
-        uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-            node-version: '18' 
+          node-version: '22' # Puedes ajustar la versión de Node.js según tus necesidades
 
-      - name: Instala Surge       
-        run: npm install --global surge
+      - name: Install Surge CLI
+        run: npm install -g surge
 
-      - name: Publicar pagina
-        run: surge --project ./ --domain ${{ secrets.SURGE_DOMAIN }} --token ${{ secrets.SURGE_API_KEY }}
+      - name: Deploy to Surge
+        run: surge ./ ${{ secrets.SURGE_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
+        env:
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+          SURGE_DOMAIN: siempreconhambre78.surge.sh # Reemplaza con tu dominio de Surge.sh (ej. mi-proyecto.surge.sh)
+
+# name: Publicar Pagina a Surge.sh
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Clona el repositorio
+#         uses: actions/checkout@v3
+
+#       - name: configura nodejs  
+#         uses: actions/setup-node@v3
+#         with:
+#             node-version: '18' 
+
+#       - name: Instala Surge       
+#         run: npm install --global surge
+
+#       - name: Publicar pagina
+#         run: surge --project ./ --domain ${{ secrets.SURGE_DOMAIN }} --token ${{ secrets.SURGE_API_KEY }}
